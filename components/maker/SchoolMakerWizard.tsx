@@ -302,23 +302,23 @@ export default function SchoolMakerWizard({
   return (
     <form onSubmit={handleGenerate} className="space-y-8 font-sans">
       {/* Overview Banner */}
-      <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#151622] p-6 md:p-8 rounded-2xl border border-[#e2e7ff] dark:border-[#222538] shadow-[0_8px_24px_rgba(28,42,200,0.04)] dark:shadow-none flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-amber-700">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
             <span>Verified Phone: {session.phone}</span>
             <span>•</span>
             <span>Creator: {session.creatorName}</span>
           </div>
-          <h2 className="font-serif font-bold text-2xl md:text-3xl text-oxford mt-1">
+          <h2 className="font-serif font-bold text-2xl md:text-3xl text-[#131b2e] dark:text-white mt-1">
             Build Your School App in 3 Simple Steps
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-1">
             Select your leadership designation, add school metadata, and toggle which functional modules to activate for your students, parents, and teachers.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold font-mono">
+          <span className="px-3.5 py-1.5 rounded-xl bg-amber-500/10 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30 text-xs font-bold font-mono">
             {selectedCount} of {AVAILABLE_MODULES.length} Modules Active
           </span>
         </div>
@@ -327,20 +327,20 @@ export default function SchoolMakerWizard({
       {/* ============================================================ */}
       {/* STEP 1: WHICH POSITION ARE YOU? (FOUNDER / PRESIDENT / PRINCIPAL) */}
       {/* ============================================================ */}
-      <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+      <div className="bg-white dark:bg-[#151622] p-6 md:p-8 rounded-2xl border border-[#e2e7ff] dark:border-[#222538] shadow-xs space-y-4 transition-colors">
+        <div className="flex items-center justify-between border-b border-[#e2e7ff] dark:border-[#222538] pb-3">
           <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#721121] dark:text-red-400">
               Step 1 of 3
             </span>
-            <h3 className="font-serif font-bold text-lg md:text-xl text-oxford mt-0.5">
+            <h3 className="font-serif font-bold text-lg md:text-xl text-[#131b2e] dark:text-white mt-0.5">
               Which Position Are You in the School?
             </h3>
           </div>
-          <span className="text-xs text-slate-500 font-mono">Select One Option</span>
+          <span className="text-xs text-[#454655] dark:text-[#a0a4c0] font-mono">Select One Option</span>
         </div>
 
-        <p className="text-xs text-slate-600">
+        <p className="text-xs text-[#454655] dark:text-[#a0a4c0]">
           Your designation will be inscribed on your school app&apos;s verified welcome charter, administrative sign-offs, and compliance documents.
         </p>
 
@@ -354,24 +354,24 @@ export default function SchoolMakerWizard({
                 onClick={() => setSelectedPosition(pos.id)}
                 className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-start gap-3 ${
                   isSelected
-                    ? 'border-oxford bg-slate-50/80 shadow-xs ring-1 ring-oxford'
-                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                    ? 'border-[#1c2ac8] dark:border-[#3b49df] bg-[#eef0ff]/80 dark:bg-[#3b49df]/15 shadow-xs ring-1 ring-[#1c2ac8] dark:ring-[#3b49df]'
+                    : 'border-[#e2e7ff] dark:border-[#222538] hover:border-[#bdc2ff] dark:hover:border-[#3b49df]/40 bg-white dark:bg-[#151622]'
                 }`}
               >
                 <div className="text-2xl flex-shrink-0 pt-0.5">{pos.icon}</div>
                 <div>
-                  <div className="font-serif font-bold text-sm text-oxford leading-snug">
+                  <div className="font-serif font-bold text-sm text-[#131b2e] dark:text-white leading-snug">
                     {pos.title}
                   </div>
-                  <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+                  <div className="text-[11px] text-[#454655] dark:text-[#a0a4c0] mt-1 leading-snug">
                     {pos.desc}
                   </div>
                   <div className="mt-2">
                     <span
                       className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
                         isSelected
-                          ? 'bg-oxford text-white'
-                          : 'bg-slate-100 text-slate-600'
+                          ? 'bg-[#1c2ac8] dark:bg-[#3b49df] text-white'
+                          : 'bg-[#f2f3ff] dark:bg-[#101119] text-[#454655] dark:text-[#a0a4c0]'
                       }`}
                     >
                       {isSelected ? 'Selected ✓' : 'Select'}
@@ -387,23 +387,23 @@ export default function SchoolMakerWizard({
       {/* ============================================================ */}
       {/* STEP 2: SCHOOL DETAILS (NAME, TEACHER COUNT, BOARD, LOCATION) */}
       {/* ============================================================ */}
-      <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+      <div className="bg-white dark:bg-[#151622] p-6 md:p-8 rounded-2xl border border-[#e2e7ff] dark:border-[#222538] shadow-xs space-y-4 transition-colors">
+        <div className="flex items-center justify-between border-b border-[#e2e7ff] dark:border-[#222538] pb-3">
           <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#721121] dark:text-red-400">
               Step 2 of 3
             </span>
-            <h3 className="font-serif font-bold text-lg md:text-xl text-oxford mt-0.5">
-              School Name & Teacher Roster Strength
+            <h3 className="font-serif font-bold text-lg md:text-xl text-[#131b2e] dark:text-white mt-0.5">
+              School Name &amp; Teacher Roster Strength
             </h3>
           </div>
-          <span className="text-xs text-slate-500 font-mono">Institutional Profile</span>
+          <span className="text-xs text-[#454655] dark:text-[#a0a4c0] font-mono">Institutional Profile</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
           {/* School Name */}
           <div className="md:col-span-2">
-            <label className="block font-bold text-slate-700 mb-1">
+            <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
               Official Name of the School *
             </label>
             <input
@@ -412,13 +412,13 @@ export default function SchoolMakerWizard({
               value={schoolName}
               onChange={(e) => setSchoolName(e.target.value)}
               placeholder="e.g. Greenwood Centennial Academy"
-              className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-oxford font-serif font-bold text-sm text-oxford"
+              className="w-full p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white dark:focus:bg-[#101119] focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] font-serif font-bold text-sm text-[#131b2e] dark:text-white"
             />
           </div>
 
           {/* Number of Teachers */}
           <div>
-            <label className="block font-bold text-slate-700 mb-1">
+            <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
               Number of Teachers in the School *
             </label>
             <input
@@ -429,25 +429,25 @@ export default function SchoolMakerWizard({
               value={teacherCount}
               onChange={(e) => setTeacherCount(e.target.value)}
               placeholder="e.g. 48"
-              className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-oxford font-mono text-slate-900 font-bold"
+              className="w-full p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white dark:focus:bg-[#101119] focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] font-mono text-[#131b2e] dark:text-white font-bold"
             />
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-[#454655] dark:text-[#a0a4c0] mt-1">
               Total teaching faculty across junior and senior wings.
             </p>
           </div>
 
           {/* Board Affiliation */}
           <div>
-            <label className="block font-bold text-slate-700 mb-1">
+            <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
               Affiliation Board *
             </label>
             <select
               value={board}
               onChange={(e) => setBoard(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-oxford text-slate-900 font-medium"
+              className="w-full p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white dark:focus:bg-[#101119] focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] text-[#131b2e] dark:text-white font-medium"
             >
               <option value="CBSE">CBSE (Central Board)</option>
-              <option value="ICSE">CISCE / ICSE & ISC</option>
+              <option value="ICSE">CISCE / ICSE &amp; ISC</option>
               <option value="Cambridge">Cambridge International / IGCSE</option>
               <option value="State Board">State Secondary Education Board</option>
               <option value="IB">International Baccalaureate (IB)</option>
@@ -456,7 +456,7 @@ export default function SchoolMakerWizard({
 
           {/* Enrolled Scholars Capacity */}
           <div>
-            <label className="block font-bold text-slate-700 mb-1">
+            <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
               Approximate Enrolled Scholars *
             </label>
             <input
@@ -464,14 +464,14 @@ export default function SchoolMakerWizard({
               value={studentCapacity}
               onChange={(e) => setStudentCapacity(e.target.value)}
               placeholder="e.g. 1,850"
-              className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-oxford font-mono text-slate-900 font-semibold"
+              className="w-full p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white dark:focus:bg-[#101119] focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] font-mono text-[#131b2e] dark:text-white font-semibold"
             />
           </div>
 
           {/* City & State */}
           <div>
-            <label className="block font-bold text-slate-700 mb-1">
-              City & Territory *
+            <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
+              City &amp; Territory *
             </label>
             <div className="flex gap-2">
               <input
@@ -480,7 +480,7 @@ export default function SchoolMakerWizard({
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="City (e.g. Kolkata)"
-                className="w-1/2 p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white"
+                className="w-1/2 p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white text-[#131b2e] dark:text-white"
               />
               <input
                 type="text"
@@ -488,24 +488,24 @@ export default function SchoolMakerWizard({
                 value={state}
                 onChange={(e) => setState(e.target.value)}
                 placeholder="State (e.g. West Bengal)"
-                className="w-1/2 p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white"
+                className="w-1/2 p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white text-[#131b2e] dark:text-white"
               />
             </div>
           </div>
 
           {/* Subdomain */}
           <div>
-            <label className="block font-bold text-slate-700 mb-1">
+            <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
               Target Subdomain Identifier *
             </label>
-            <div className="flex items-center rounded-lg border border-slate-300 overflow-hidden bg-white text-xs">
+            <div className="flex items-center rounded-xl border border-[#c6c5d8] dark:border-[#2b2f4a] overflow-hidden bg-[#faf8ff] dark:bg-[#101119] text-xs">
               <input
                 type="text"
                 value={subdomain}
                 onChange={(e) => setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                className="w-1/2 p-2.5 font-mono font-bold text-oxford focus:outline-hidden"
+                className="w-1/2 p-2.5 font-mono font-bold text-[#131b2e] dark:text-white focus:outline-hidden bg-transparent"
               />
-              <span className="w-1/2 p-2.5 bg-slate-100 text-slate-500 font-mono text-[11px] border-l border-slate-200">
+              <span className="w-1/2 p-2.5 bg-[#f2f3ff] dark:bg-[#151622] text-[#454655] dark:text-[#a0a4c0] font-mono text-[11px] border-l border-[#c6c5d8] dark:border-[#2b2f4a]">
                 .nexacampus.com
               </span>
             </div>
@@ -513,7 +513,7 @@ export default function SchoolMakerWizard({
 
           {/* Institutional Motto */}
           <div>
-            <label className="block font-bold text-slate-700 mb-1">
+            <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
               School Motto
             </label>
             <input
@@ -521,7 +521,7 @@ export default function SchoolMakerWizard({
               value={motto}
               onChange={(e) => setMotto(e.target.value)}
               placeholder="e.g. Veritas et Virtus"
-              className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white italic font-serif"
+              className="w-full p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white italic font-serif text-[#131b2e] dark:text-white"
             />
           </div>
         </div>
@@ -530,16 +530,16 @@ export default function SchoolMakerWizard({
       {/* ============================================================ */}
       {/* STEP 3: WHAT THINGS ARE REQUIRED? (CANTEEN, BUS, LIBRARY...)  */}
       {/* ============================================================ */}
-      <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-3 gap-3">
+      <div className="bg-white dark:bg-[#151622] p-6 md:p-8 rounded-2xl border border-[#e2e7ff] dark:border-[#222538] shadow-xs space-y-4 transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#e2e7ff] dark:border-[#222538] pb-3 gap-3">
           <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#721121] dark:text-red-400">
               Step 3 of 3
             </span>
-            <h3 className="font-serif font-bold text-lg md:text-xl text-oxford mt-0.5">
+            <h3 className="font-serif font-bold text-lg md:text-xl text-[#131b2e] dark:text-white mt-0.5">
               Select Module Access Required for Your App
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
               Choose the exact tools needed for your school: Canteen access, Bus tracking, Library catalog, Attendance register, and more.
             </p>
           </div>
@@ -549,14 +549,14 @@ export default function SchoolMakerWizard({
             <button
               type="button"
               onClick={selectEssentialModules}
-              className="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors"
+              className="px-3.5 py-1.5 text-xs font-semibold text-[#131b2e] dark:text-[#eaedff] bg-[#f2f3ff] hover:bg-[#e4e7ff] dark:bg-[#101119] dark:hover:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#222538] rounded-lg transition-colors cursor-pointer"
             >
               Core Essentials
             </button>
             <button
               type="button"
               onClick={selectAllModules}
-              className="px-3 py-1.5 text-xs font-bold text-oxford bg-amber-100 hover:bg-amber-200 rounded-md transition-colors"
+              className="px-3.5 py-1.5 text-xs font-bold text-amber-800 dark:text-amber-300 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 rounded-lg transition-colors cursor-pointer"
             >
               Select All (15)
             </button>
@@ -573,8 +573,8 @@ export default function SchoolMakerWizard({
                 onClick={() => toggleModule(mod.id)}
                 className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-start gap-3.5 ${
                   isEnabled
-                    ? 'border-oxford bg-slate-50/70 shadow-xs'
-                    : 'border-slate-200 hover:border-slate-300 bg-white opacity-75'
+                    ? 'border-[#1c2ac8] dark:border-[#3b49df] bg-[#eef0ff]/70 dark:bg-[#3b49df]/15 shadow-xs'
+                    : 'border-[#e2e7ff] dark:border-[#222538] hover:border-[#bdc2ff] dark:hover:border-[#3b49df]/40 bg-white dark:bg-[#151622] opacity-75'
                 }`}
               >
                 {/* Checkbox Icon */}
@@ -582,8 +582,8 @@ export default function SchoolMakerWizard({
                   <div
                     className={`w-5 h-5 rounded flex items-center justify-center font-bold text-xs ${
                       isEnabled
-                        ? 'bg-oxford text-white'
-                        : 'border border-slate-300 bg-white'
+                        ? 'bg-[#1c2ac8] dark:bg-[#3b49df] text-white'
+                        : 'border border-[#c6c5d8] dark:border-[#2b2f4a] bg-white dark:bg-[#101119]'
                     }`}
                   >
                     {isEnabled ? '✓' : ''}
@@ -592,20 +592,20 @@ export default function SchoolMakerWizard({
 
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h4 className="font-serif font-bold text-sm text-oxford">
+                    <h4 className="font-serif font-bold text-sm text-[#131b2e] dark:text-white">
                       {mod.title}
                     </h4>
                     {mod.popular && (
-                      <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-amber-100 text-amber-900">
+                      <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
                         Popular
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-600 leading-relaxed">
+                  <p className="text-xs text-[#454655] dark:text-[#a0a4c0] leading-relaxed">
                     {mod.desc}
                   </p>
                   <div className="pt-1">
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <span className="text-[10px] font-mono text-[#454655] dark:text-[#a0a4c0]">
                       Category: {mod.category}
                     </span>
                   </div>
@@ -617,19 +617,19 @@ export default function SchoolMakerWizard({
       </div>
 
       {/* Submit Button Bar */}
-      <div className="p-6 bg-slate-900 text-white rounded-xl shadow-lg border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-6 bg-gradient-to-r from-[#0A192F] via-[#101a38] to-[#1c2ac8] dark:from-[#151622] dark:via-[#13141f] dark:to-[#1a1c2b] text-white rounded-2xl shadow-xl border border-[#e2e7ff]/10 dark:border-[#222538] flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors">
         <div>
           <div className="font-serif font-bold text-base text-amber-300">
             Ready to Generate {schoolName}?
           </div>
-          <div className="text-xs text-slate-300 mt-0.5 font-mono">
+          <div className="text-xs text-slate-200/90 mt-0.5 font-mono">
             Creator Role: {POSITION_OPTIONS.find((p) => p.id === selectedPosition)?.title} • {teacherCount} Teachers • {selectedCount} Active Modules
           </div>
         </div>
 
         <button
           type="submit"
-          className="px-8 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-lg shadow-md transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5 cursor-pointer"
+          className="px-8 py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5 cursor-pointer"
         >
           <span>Generate School App Now</span>
           <span className="text-base">🚀</span>
