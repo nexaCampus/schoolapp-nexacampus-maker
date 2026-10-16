@@ -40,10 +40,18 @@ export default function SchoolMakerStudio() {
   const handleLogout = () => {
     try {
       localStorage.removeItem('schoolmaker_creator_session');
+      localStorage.removeItem('schoolmaker_current_school');
+      localStorage.removeItem('nexacampus_tenant_slug');
+      if (typeof document !== 'undefined') {
+        document.cookie = 'school_tenant_slug=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'school_session_active=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'school_auth_token=; path=/; max-age=0; SameSite=Lax';
+      }
     } catch (err) {
       console.error(err);
     }
     setSession(null);
+    setCurrentSchool(null);
     setAuthModalOpen(true);
   };
 
