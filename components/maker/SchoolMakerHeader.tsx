@@ -8,6 +8,7 @@ export interface CreatorSession {
   phone: string;
   creatorName: string;
   verifiedAt: string;
+  token?: string;
 }
 
 export default function SchoolMakerHeader({
