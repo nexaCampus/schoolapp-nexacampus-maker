@@ -13,15 +13,19 @@ export default function SchoolMakerGeneratedApp({
   onReconfigure: () => void;
   onCreateNew: () => void;
 }) {
-  const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [activeModuleModal, setActiveModuleModal] = useState<string | null>(null);
 
-  const portalUrl = `https://${config.subdomain}.nexacampus.com`;
+  const studentDomain = `https://${config.subdomain}.nexacampus.tech`;
+  const adminDomain = `https://${config.subdomain}.admin.nexacampus.tech`;
+  const vercelFallback = `https://${config.subdomain}-nexacampus.vercel.app`;
+  const localStudentPath = `/school/${config.subdomain}`;
+  const localAdminPath = `/school/${config.subdomain}/admin`;
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(portalUrl);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2500);
+  const handleCopy = (text: string, key: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2500);
   };
 
   // Filter only enabled modules
@@ -40,11 +44,11 @@ export default function SchoolMakerGeneratedApp({
           🏛️
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-2">
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 relative z-10">
+          <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-xs font-mono font-bold">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>School App Provisioned Successfully</span>
+              <span>Autonomous School OS Provisioned Successfully</span>
             </div>
 
             <h1 className="font-serif font-bold text-2xl md:text-4xl text-[#131b2e] dark:text-white">
@@ -52,11 +56,11 @@ export default function SchoolMakerGeneratedApp({
             </h1>
 
             <div className="flex items-center gap-2 text-xs font-serif italic text-[#454655] dark:text-[#a0a4c0]">
-              <span>“{config.motto}”</span>
+              <span>“{config.motto || 'Excellence in Education'}”</span>
             </div>
 
             {/* Creator & Institutional Meta Bar */}
-            <div className="pt-2 flex flex-wrap items-center gap-y-2 gap-x-4 text-xs font-mono text-[#454655] dark:text-[#a0a4c0]">
+            <div className="pt-2 flex flex-wrap items-center gap-y-2 gap-x-3 text-xs font-mono text-[#454655] dark:text-[#a0a4c0]">
               <div className="flex items-center gap-1.5 bg-[#f2f3ff] dark:bg-[#101119] border border-[#e2e7ff] dark:border-[#222538] px-2.5 py-1 rounded-lg">
                 <span className="text-[#131b2e] dark:text-white font-bold">Creator:</span>
                 <span>{config.creatorName} ({config.creatorPosition})</span>
@@ -80,25 +84,68 @@ export default function SchoolMakerGeneratedApp({
             </div>
           </div>
 
-          {/* Quick Share / Launch Actions */}
-          <div className="flex flex-col gap-2.5 flex-shrink-0">
-            <div className="bg-[#faf8ff] dark:bg-[#101119] p-3 rounded-xl border border-[#e2e7ff] dark:border-[#222538] text-right">
-              <span className="text-[10px] font-mono text-[#454655] dark:text-[#a0a4c0] block uppercase">Public App Address</span>
-              <span className="font-mono font-bold text-xs text-[#1c2ac8] dark:text-[#bdc2ff] block">{portalUrl}</span>
+          {/* Provisioned Domains & Launch Actions Card */}
+          <div className="flex flex-col gap-3 flex-shrink-0 w-full lg:w-96">
+            <div className="bg-[#faf8ff] dark:bg-[#101119] p-4 rounded-2xl border border-[#e2e7ff] dark:border-[#222538] space-y-2.5">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#721121] dark:text-red-400 block">
+                Live Subdomains &amp; URLs
+              </span>
+
+              {/* Student Portal URL */}
+              <div className="flex items-center justify-between gap-2 p-2 rounded-lg bg-white dark:bg-[#151622] border border-[#e2e7ff] dark:border-[#262a40] text-xs">
+                <div className="truncate">
+                  <span className="text-[10px] block font-mono text-[#454655] dark:text-[#a0a4c0] uppercase">Student / Public Portal</span>
+                  <a href={studentDomain} target="_blank" rel="noopener noreferrer" className="font-mono font-bold text-[#1c2ac8] dark:text-[#bdc2ff] truncate hover:underline">
+                    {config.subdomain}.nexacampus.tech
+                  </a>
+                </div>
+                <button
+                  onClick={() => handleCopy(studentDomain, 'student')}
+                  className="px-2 py-1 text-[10px] font-bold bg-[#f2f3ff] dark:bg-[#222538] hover:bg-[#e4e7ff] rounded cursor-pointer transition-colors"
+                >
+                  {copiedKey === 'student' ? '✓ Copied' : 'Copy'}
+                </button>
+              </div>
+
+              {/* Admin Portal URL */}
+              <div className="flex items-center justify-between gap-2 p-2 rounded-lg bg-white dark:bg-[#151622] border border-[#e2e7ff] dark:border-[#262a40] text-xs">
+                <div className="truncate">
+                  <span className="text-[10px] block font-mono text-[#454655] dark:text-[#a0a4c0] uppercase">Admin / Principal Portal</span>
+                  <a href={adminDomain} target="_blank" rel="noopener noreferrer" className="font-mono font-bold text-[#721121] dark:text-rose-400 truncate hover:underline">
+                    {config.subdomain}.admin.nexacampus.tech
+                  </a>
+                </div>
+                <button
+                  onClick={() => handleCopy(adminDomain, 'admin')}
+                  className="px-2 py-1 text-[10px] font-bold bg-[#f2f3ff] dark:bg-[#222538] hover:bg-[#e4e7ff] rounded cursor-pointer transition-colors"
+                >
+                  {copiedKey === 'admin' ? '✓ Copied' : 'Copy'}
+                </button>
+              </div>
+
+              {/* Fallback URL info */}
+              <div className="text-[10px] font-mono text-[#454655] dark:text-[#a0a4c0] flex items-center justify-between pt-1">
+                <span>Instant Fallback:</span>
+                <Link href={localStudentPath} className="text-[#1c2ac8] dark:text-[#bdc2ff] hover:underline font-bold">
+                  {localStudentPath}
+                </Link>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleCopyLink}
-                className="px-4 py-2 bg-[#f2f3ff] dark:bg-[#1a1c2b] hover:bg-[#e4e7ff] dark:hover:bg-[#222538] text-[#131b2e] dark:text-[#eaedff] rounded-xl text-xs font-bold transition-colors border border-[#e2e7ff] dark:border-[#262a40] cursor-pointer"
-              >
-                {copiedLink ? 'Copied ✓' : 'Copy Link'}
-              </button>
+            {/* Launch Action Buttons */}
+            <div className="grid grid-cols-2 gap-2">
               <Link
-                href={`/?tenant=${config.subdomain}`}
-                className="px-5 py-2 bg-[#1c2ac8] hover:bg-[#15209e] dark:bg-[#3b49df] dark:hover:bg-[#2e3cc4] text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+                href={localStudentPath}
+                className="px-4 py-2.5 bg-[#1c2ac8] hover:bg-[#15209e] dark:bg-[#3b49df] dark:hover:bg-[#2e3cc4] text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer text-center"
               >
-                <span>Launch App</span>
+                <span>Student Portal</span>
+                <span className="text-amber-300">→</span>
+              </Link>
+              <Link
+                href={localAdminPath}
+                className="px-4 py-2.5 bg-[#721121] hover:bg-[#570d19] dark:bg-rose-900/60 dark:hover:bg-rose-900/80 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer text-center"
+              >
+                <span>Admin Portal</span>
                 <span className="text-amber-300">→</span>
               </Link>
             </div>
