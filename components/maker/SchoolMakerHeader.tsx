@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import DarkModeToggle from '@/components/DarkModeToggle';
+import LogoEmblem from '@/components/LogoEmblem';
 
 export interface CreatorSession {
   phone: string;
@@ -26,9 +27,7 @@ export default function SchoolMakerHeader({
         {/* Brand Identity */}
         <div className="flex items-center gap-3">
           <Link href="/maker" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-lg shadow-sm group-hover:bg-amber-400 transition-colors">
-              ⚙️
-            </div>
+            <LogoEmblem className="h-9 w-9 flex-shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform" />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-serif font-bold text-base md:text-lg text-[#131b2e] dark:text-white tracking-tight group-hover:text-[#1c2ac8] dark:group-hover:text-[#bdc2ff] transition-colors">

@@ -1,0 +1,22 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2a38e8" />
+          <stop offset="50%" stop-color="#1c2ac8" />
+          <stop offset="100%" stop-color="#0f198f" />
+        </linearGradient>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fbbf24" />
+          <stop offset="100%" stop-color="#f59e0b" />
+        </linearGradient>
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="8.2" stdDeviation="8.2" flood-opacity="0.35"/>
+        </filter>
+      </defs>
+      <rect width="512" height="512" rx="113" fill="url(#bgGrad)" />
+      <g transform="translate(71.68, 71.68) scale(15.3600)" filter="url(#shadow)">
+        <path d="M12 2.5L1 8.5L12 14.5L21 9.59V16.5H23V8.5L12 2.5Z" fill="#ffffff" />
+        <path d="M5 12.68V16.68C5 19.34 8.13 21.5 12 21.5C15.87 21.5 19 19.34 19 16.68V12.68L12 16.5L5 12.68Z" fill="#ffffff" fill-opacity="0.9" />
+        <circle cx="21.5" cy="8.5" r="1.8" fill="url(#goldGrad)" />
+      </g>
+    </svg>
