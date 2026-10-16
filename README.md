@@ -1,3 +1,7 @@
+# NexaCampus SchoolMaker Extension
+
+Instant Subdomain Provisioning & Dynamic Module Configuration Engine.
+
 # NexaCampus SchoolMaker (`schoolapp-nexacampus-maker`)
 
 [![Extension for NexaCampus](https://img.shields.io/badge/Extension%20for-nexaCampus%2Fschool--webapp-0A192F.svg?style=flat-square&logo=github)](https://github.com/nexaCampus/school-webapp)
