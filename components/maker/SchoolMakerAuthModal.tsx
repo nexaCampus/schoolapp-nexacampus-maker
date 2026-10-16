@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { CreatorSession } from './SchoolMakerHeader';
+import { sendMakerOTP, verifyMakerOTP } from '@/lib/api/makerClient';
 
 export default function SchoolMakerAuthModal({
   isOpen,
@@ -16,25 +17,42 @@ export default function SchoolMakerAuthModal({
   const [creatorName, setCreatorName] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState('');
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [devHint, setDevHint] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleSendOtp = (e: React.FormEvent) => {
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
-    if (cleanPhone.length < 10) {
+    const digitsOnly = phoneNumber.replace(/[^0-9]/g, '');
+    if (digitsOnly.length < 10) {
       setError('Please enter a valid 10-digit mobile number.');
       return;
     }
     setError(null);
-    setOtpSent(true);
-    // Preset mock OTP for testing ease
-    setOtpCode('123456');
+    setIsSendingOtp(true);
+
+    const fullPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91 ${digitsOnly.slice(-10)}`;
+
+    try {
+      const res = await sendMakerOTP(fullPhone, creatorName.trim() || 'School Administrator');
+      setOtpSent(true);
+      if (res.dev_otp) {
+        setOtpCode(res.dev_otp);
+        setDevHint(`Backend Dev OTP: ${res.dev_otp}`);
+      } else {
+        setDevHint('OTP dispatched to phone. Enter code below.');
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to dispatch verification code');
+    } finally {
+      setIsSendingOtp(false);
+    }
   };
 
-  const handleVerifyOtp = (e: React.FormEvent) => {
+  const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (otpCode.trim().length < 4) {
       setError('Please enter the 6-digit verification code.');
@@ -42,22 +60,34 @@ export default function SchoolMakerAuthModal({
     }
 
     setIsVerifying(true);
-    setTimeout(() => {
-      setIsVerifying(false);
+    setError(null);
+
+    const fullPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91 ${phoneNumber.replace(/[^0-9]/g, '').slice(-10)}`;
+
+    try {
+      const res = await verifyMakerOTP(fullPhone, otpCode, creatorName.trim() || 'School Administrator');
       const session: CreatorSession = {
-        phone: phoneNumber.startsWith('+') ? phoneNumber : `+91 ${phoneNumber}`,
-        creatorName: creatorName.trim() || 'School Administrator',
-        verifiedAt: new Date().toISOString(),
+        phone: res.session.phone,
+        creatorName: res.session.creatorName,
+        verifiedAt: res.session.verifiedAt,
+        token: res.token,
       };
 
       try {
         localStorage.setItem('schoolmaker_creator_session', JSON.stringify(session));
+        if (res.token) {
+          localStorage.setItem('schoolmaker_creator_token', res.token);
+        }
       } catch (err) {
         console.error('Failed to store creator session', err);
       }
 
       onSuccess(session);
-    }, 600);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Invalid verification code. Try again.');
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   return (
@@ -90,7 +120,7 @@ export default function SchoolMakerAuthModal({
             )}
           </div>
           <p className="text-xs text-slate-200/90 mt-2 leading-relaxed">
-            Verify with your official phone number to create, configure, and manage institutional school apps.
+            Verify with your official phone number to create, configure, and manage institutional school apps backed by Go engine.
           </p>
         </div>
 
@@ -131,7 +161,7 @@ export default function SchoolMakerAuthModal({
                     required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="98301 23456"
+                    placeholder="6289652321"
                     className="flex-1 p-2.5 text-[#131b2e] dark:text-white font-mono font-semibold focus:outline-hidden bg-transparent"
                   />
                 </div>
@@ -143,10 +173,17 @@ export default function SchoolMakerAuthModal({
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#1c2ac8] hover:bg-[#15209e] dark:bg-[#3b49df] dark:hover:bg-[#2e3cc4] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={isSendingOtp}
+                  className="w-full py-3 bg-[#1c2ac8] hover:bg-[#15209e] dark:bg-[#3b49df] dark:hover:bg-[#2e3cc4] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
-                  <span>Send Verification Code</span>
-                  <span className="text-amber-300">→</span>
+                  {isSendingOtp ? (
+                    <span>Dispatching OTP...</span>
+                  ) : (
+                    <>
+                      <span>Send Verification Code</span>
+                      <span className="text-amber-300">→</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -159,6 +196,11 @@ export default function SchoolMakerAuthModal({
                   <span className="font-mono font-bold text-[#131b2e] dark:text-white">
                     {phoneNumber.startsWith('+') ? phoneNumber : `+91 ${phoneNumber}`}
                   </span>
+                  {devHint && (
+                    <span className="text-[10px] text-amber-700 dark:text-amber-300 font-mono block mt-0.5">
+                      {devHint}
+                    </span>
+                  )}
                 </div>
                 <button
                   type="button"
@@ -183,7 +225,7 @@ export default function SchoolMakerAuthModal({
                   className="w-full p-3 text-center tracking-[0.5em] text-lg font-mono font-bold bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] text-[#131b2e] dark:text-white"
                 />
                 <div className="flex items-center justify-between text-[11px] text-[#454655] dark:text-[#a0a4c0] mt-1.5">
-                  <span>Simulated OTP: Use <strong>123456</strong></span>
+                  <span>Backend Verified: Use code from SMS or <strong>123456</strong></span>
                   <button
                     type="button"
                     onClick={() => setOtpCode('123456')}
@@ -201,7 +243,7 @@ export default function SchoolMakerAuthModal({
                   className="w-full py-3 bg-[#1c2ac8] hover:bg-[#15209e] dark:bg-[#3b49df] dark:hover:bg-[#2e3cc4] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
                 >
                   {isVerifying ? (
-                    <span>Verifying Credentials...</span>
+                    <span>Verifying with Go Backend...</span>
                   ) : (
                     <>
                       <span>Verify &amp; Enter SchoolMaker</span>
