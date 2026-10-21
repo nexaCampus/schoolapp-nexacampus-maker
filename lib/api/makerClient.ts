@@ -42,7 +42,10 @@ export function getApiBase(): string {
 
     const host = window.location.hostname;
     if (host === 'localhost' || host === '127.0.0.1') {
-      return 'http://localhost:8080';
+      return (
+        process.env.NEXT_PUBLIC_LOCAL_GO_API_URL ||
+        'http://localhost:8080'
+      );
     }
   }
   return (
