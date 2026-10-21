@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { CreatorSession } from './SchoolMakerHeader';
 import { checkSlugAvailability, provisionSchool } from '@/lib/api/makerClient';
+import { CANONICAL_APP_HOST } from '@/lib/tenantUrls';
 
 export interface SchoolAppConfig {
   // Creator Profile
@@ -641,7 +642,7 @@ export default function SchoolMakerWizard({
                 <div className="flex items-center justify-between text-[#454655] dark:text-[#a0a4c0]">
                   <span className="font-sans font-bold text-[#131b2e] dark:text-white">Instant Vercel Fallback:</span>
                   <span className="text-slate-600 dark:text-slate-400">
-                    https://school-webapp-self.vercel.app/school/{cleanSubdomain}
+                    https://{cleanSubdomain}.{CANONICAL_APP_HOST}
                   </span>
                 </div>
               </div>

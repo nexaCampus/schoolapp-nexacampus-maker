@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { SchoolAppConfig, AVAILABLE_MODULES } from './SchoolMakerWizard';
+import { CANONICAL_APP_HOST, tenantPortalUrls } from '@/lib/tenantUrls';
 
 export default function SchoolMakerGeneratedApp({
   config,
@@ -16,11 +16,12 @@ export default function SchoolMakerGeneratedApp({
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [activeModuleModal, setActiveModuleModal] = useState<string | null>(null);
 
-  const studentDomain = `https://${config.subdomain}.nexacampus.tech`;
-  const adminDomain = `https://${config.subdomain}.admin.nexacampus.tech`;
-  const vercelFallback = `https://${config.subdomain}-nexacampus.vercel.app`;
-  const localStudentPath = `/school/${config.subdomain}`;
-  const localAdminPath = `/school/${config.subdomain}/admin`;
+  const urls = tenantPortalUrls(config.subdomain);
+  const studentDomain = urls.appDomain;
+  const adminDomain = urls.appAdminDomain;
+  const customDomain = urls.customDomain;
+  const studentHost = `${config.subdomain}.${CANONICAL_APP_HOST}`;
+  const adminHost = `${config.subdomain}.admin.${CANONICAL_APP_HOST}`;
 
   const handleCopy = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
@@ -96,7 +97,7 @@ export default function SchoolMakerGeneratedApp({
                 <div className="truncate">
                   <span className="text-[10px] block font-mono text-[#454655] dark:text-[#a0a4c0] uppercase">Student / Public Portal</span>
                   <a href={studentDomain} target="_blank" rel="noopener noreferrer" className="font-mono font-bold text-[#1c2ac8] dark:text-[#bdc2ff] truncate hover:underline">
-                    {config.subdomain}.nexacampus.tech
+                    {studentHost}
                   </a>
                 </div>
                 <button
@@ -112,7 +113,7 @@ export default function SchoolMakerGeneratedApp({
                 <div className="truncate">
                   <span className="text-[10px] block font-mono text-[#454655] dark:text-[#a0a4c0] uppercase">Admin / Principal Portal</span>
                   <a href={adminDomain} target="_blank" rel="noopener noreferrer" className="font-mono font-bold text-[#721121] dark:text-rose-400 truncate hover:underline">
-                    {config.subdomain}.admin.nexacampus.tech
+                    {adminHost}
                   </a>
                 </div>
                 <button
@@ -125,29 +126,33 @@ export default function SchoolMakerGeneratedApp({
 
               {/* Fallback URL info */}
               <div className="text-[10px] font-mono text-[#454655] dark:text-[#a0a4c0] flex items-center justify-between pt-1">
-                <span>Instant Fallback:</span>
-                <Link href={localStudentPath} className="text-[#1c2ac8] dark:text-[#bdc2ff] hover:underline font-bold">
-                  {localStudentPath}
-                </Link>
+                <span>Custom Domain:</span>
+                <a href={customDomain} target="_blank" rel="noopener noreferrer" className="text-[#1c2ac8] dark:text-[#bdc2ff] hover:underline font-bold truncate">
+                  {config.subdomain}.nexacampus.tech
+                </a>
               </div>
             </div>
 
             {/* Launch Action Buttons */}
             <div className="grid grid-cols-2 gap-2">
-              <Link
-                href={localStudentPath}
+              <a
+                href={studentDomain}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="px-4 py-2.5 bg-[#1c2ac8] hover:bg-[#15209e] dark:bg-[#3b49df] dark:hover:bg-[#2e3cc4] text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer text-center"
               >
                 <span>Student Portal</span>
                 <span className="text-amber-300">→</span>
-              </Link>
-              <Link
-                href={localAdminPath}
+              </a>
+              <a
+                href={adminDomain}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="px-4 py-2.5 bg-[#721121] hover:bg-[#570d19] dark:bg-rose-900/60 dark:hover:bg-rose-900/80 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer text-center"
               >
                 <span>Admin Portal</span>
                 <span className="text-amber-300">→</span>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
