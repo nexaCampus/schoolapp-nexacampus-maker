@@ -73,7 +73,14 @@ export async function sendMakerOTP(
 
     return await res.json();
   } catch (err: unknown) {
-    console.warn('[makerClient] sendMakerOTP backend fetch error, using safe fallback:', err);
+    const message = err instanceof Error ? err.message : String(err);
+    const isNetworkFailure =
+      err instanceof TypeError ||
+      /fetch failed|network|ECONNREFUSED|Failed to fetch/i.test(message);
+    if (!isNetworkFailure) {
+      throw err;
+    }
+    console.warn('[makerClient] sendMakerOTP backend unreachable, using offline fallback:', err);
     return {
       success: true,
       message: `Verification code sent to ${cleanPhone}`,
@@ -104,7 +111,14 @@ export async function verifyMakerOTP(
 
     return await res.json();
   } catch (err: unknown) {
-    console.warn('[makerClient] verifyMakerOTP backend fetch error, fallback:', err);
+    const message = err instanceof Error ? err.message : String(err);
+    const isNetworkFailure =
+      err instanceof TypeError ||
+      /fetch failed|network|ECONNREFUSED|Failed to fetch/i.test(message);
+    if (!isNetworkFailure) {
+      throw err;
+    }
+    console.warn('[makerClient] verifyMakerOTP backend unreachable, using offline fallback:', err);
     if (otp.trim() === '123456') {
       const token = 'tok_dev_' + Math.random().toString(36).substring(2, 15);
       const session: CreatorSessionData = {
