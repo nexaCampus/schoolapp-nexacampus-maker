@@ -214,7 +214,17 @@ export async function provisionSchool(payload: {
 
     return await res.json();
   } catch (err: unknown) {
-    console.warn('[makerClient] provisionSchool backend error, generating optimistic record:', err);
+    const message = err instanceof Error ? err.message : String(err);
+    const isNetworkFailure =
+      err instanceof TypeError ||
+      /fetch failed|network|ECONNREFUSED|Failed to fetch/i.test(message);
+    if (!isNetworkFailure) {
+      // A rejected request (slug taken, forbidden, invalid payload) must surface
+      // as a failure - it is never downgraded to a local "optimistic" record.
+      throw err;
+    }
+
+    console.warn('[makerClient] provisionSchool backend unreachable, generating offline record:', err);
     const slug = bodyData.subdomain_slug;
     const optimisticRecord: SchoolRecordData = {
       id: 'sch-' + slug,
