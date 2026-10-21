@@ -4,6 +4,33 @@ import React, { useState } from 'react';
 import { CreatorSession } from './SchoolMakerHeader';
 import { sendMakerOTP, verifyMakerOTP } from '@/lib/api/makerClient';
 
+const OTP_VERIFY_ERROR = 'Enter the Correct OTP and try again.';
+const NETWORK_ERROR = 'Could not reach the verification service. Check your connection and try again.';
+const SEND_ERROR = 'Could not dispatch the verification code. Please try again.';
+
+function isNetworkFailure(err: unknown): boolean {
+  const raw = err instanceof Error ? err.message : String(err ?? '');
+  return (
+    err instanceof TypeError ||
+    /failed to fetch|networkerror|load failed|fetch failed|failed to load|ECONNREFUSED/i.test(raw)
+  );
+}
+
+/** Dispatch step: never leak a raw transport error to the creator. */
+function sendErrorMessage(err: unknown): string {
+  if (isNetworkFailure(err)) return NETWORK_ERROR;
+  const raw = err instanceof Error ? err.message : String(err ?? '');
+  if (!raw || /failed to|internal|exception|status \d|\[object|undefined/i.test(raw)) {
+    return SEND_ERROR;
+  }
+  return raw;
+}
+
+/** Verification step: every failure is an OTP problem from the creator's point of view. */
+function verifyErrorMessage(): string {
+  return OTP_VERIFY_ERROR;
+}
+
 export default function SchoolMakerAuthModal({
   isOpen,
   onClose,
@@ -21,6 +48,7 @@ export default function SchoolMakerAuthModal({
   const [isVerifying, setIsVerifying] = useState(false);
   const [devHint, setDevHint] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [otpError, setOtpError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -32,6 +60,7 @@ export default function SchoolMakerAuthModal({
       return;
     }
     setError(null);
+    setOtpError(null);
     setIsSendingOtp(true);
 
     const fullPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91 ${digitsOnly.slice(-10)}`;
@@ -46,7 +75,7 @@ export default function SchoolMakerAuthModal({
         setDevHint('OTP dispatched to phone. Enter code below.');
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to dispatch verification code');
+      setError(sendErrorMessage(err));
     } finally {
       setIsSendingOtp(false);
     }
@@ -55,12 +84,14 @@ export default function SchoolMakerAuthModal({
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (otpCode.trim().length < 4) {
-      setError('Please enter the 6-digit verification code.');
+      setError(null);
+      setOtpError('Enter the correct 6-digit OTP sent to your phone.');
       return;
     }
 
     setIsVerifying(true);
     setError(null);
+    setOtpError(null);
 
     const fullPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91 ${phoneNumber.replace(/[^0-9]/g, '').slice(-10)}`;
 
@@ -84,7 +115,8 @@ export default function SchoolMakerAuthModal({
 
       onSuccess(session);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Invalid verification code. Try again.');
+      setError(null);
+      setOtpError(verifyErrorMessage());
     } finally {
       setIsVerifying(false);
     }
@@ -126,7 +158,7 @@ export default function SchoolMakerAuthModal({
 
         {/* Modal Body */}
         <div className="p-6">
-          {error && (
+          {error && !otpSent && (
             <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 text-xs rounded-xl border border-red-200 dark:border-red-800">
               {error}
             </div>
@@ -220,16 +252,25 @@ export default function SchoolMakerAuthModal({
                   maxLength={6}
                   required
                   value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value)}
+                  onChange={(e) => {
+                    setOtpCode(e.target.value);
+                    if (otpError) setOtpError(null);
+                  }}
                   placeholder="123456"
                   className="w-full p-3 text-center tracking-[0.5em] text-lg font-mono font-bold bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] text-[#131b2e] dark:text-white"
                 />
                 <div className="flex items-center justify-between text-[11px] text-[#454655] dark:text-[#a0a4c0] mt-1.5">
-                  <span>Enter the 6-digit code sent to your phone.</span>
+                  <span>Enter the correct 6-digit OTP sent to your phone.</span>
                   {devHint && (
                     <span className="font-mono font-bold text-amber-600 dark:text-amber-300">{devHint}</span>
                   )}
                 </div>
+                {otpError && (
+                  <p className="mt-2 flex items-start gap-1.5 text-[11px] font-bold text-red-600 dark:text-red-400">
+                    <span aria-hidden="true">⚠</span>
+                    <span>{otpError}</span>
+                  </p>
+                )}
               </div>
 
               <div className="pt-2">
