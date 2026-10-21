@@ -225,14 +225,10 @@ export default function SchoolMakerAuthModal({
                   className="w-full p-3 text-center tracking-[0.5em] text-lg font-mono font-bold bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] text-[#131b2e] dark:text-white"
                 />
                 <div className="flex items-center justify-between text-[11px] text-[#454655] dark:text-[#a0a4c0] mt-1.5">
-                  <span>Backend Verified: Use code from SMS or <strong>123456</strong></span>
-                  <button
-                    type="button"
-                    onClick={() => setOtpCode('123456')}
-                    className="text-[#1c2ac8] dark:text-[#bdc2ff] underline font-bold cursor-pointer"
-                  >
-                    Auto-fill
-                  </button>
+                  <span>Enter the 6-digit code sent to your phone.</span>
+                  {devHint && (
+                    <span className="font-mono font-bold text-amber-600 dark:text-amber-300">{devHint}</span>
+                  )}
                 </div>
               </div>
 
