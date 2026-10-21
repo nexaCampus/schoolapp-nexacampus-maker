@@ -3,6 +3,8 @@
  * Interfaces with Go Orchestrator Backend deployed on Render or Local Dev.
  */
 
+import { tenantPortalUrls } from '@/lib/tenantUrls';
+
 export interface CreatorSessionData {
   phone: string;
   creatorName: string;
@@ -161,15 +163,16 @@ export async function checkSlugAvailability(slug: string): Promise<{
   }
 
   const isValid = /^[a-z0-9][a-z0-9-]{1,30}[a-z0-9]$/.test(cleanSlug);
+  const urls = tenantPortalUrls(cleanSlug);
   return {
     valid: isValid,
     available: true,
     slug: cleanSlug,
     urls: {
-      student_custom: `https://${cleanSlug}.nexacampus.tech`,
-      admin_custom: `https://${cleanSlug}.admin.nexacampus.tech`,
-      vercel_fallback: `https://${cleanSlug}-nexacampus.vercel.app`,
-      path_fallback: `https://school-webapp-self.vercel.app/school/${cleanSlug}`,
+      student_custom: urls.customDomain,
+      admin_custom: urls.customAdminDomain,
+      vercel_fallback: urls.appDomain,
+      path_fallback: urls.pathFallback,
     },
   };
 }
@@ -243,12 +246,13 @@ export async function provisionSchool(payload: {
 
     console.warn('[makerClient] provisionSchool backend unreachable, generating offline record:', err);
     const slug = bodyData.subdomain_slug;
+    const urls = tenantPortalUrls(slug);
     const optimisticRecord: SchoolRecordData = {
       id: 'sch-' + slug,
       ...bodyData,
-      student_domain: `https://${slug}.nexacampus.tech`,
-      admin_domain: `https://${slug}.admin.nexacampus.tech`,
-      vercel_fallback_domain: `https://${slug}-nexacampus.vercel.app`,
+      student_domain: urls.customDomain,
+      admin_domain: urls.customAdminDomain,
+      vercel_fallback_domain: urls.appDomain,
       provisioning_status: 'active',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -257,11 +261,11 @@ export async function provisionSchool(payload: {
     return {
       success: true,
       school: optimisticRecord,
-      student_domain: `https://${slug}.nexacampus.tech`,
-      admin_domain: `https://${slug}.admin.nexacampus.tech`,
-      vercel_fallback_domain: `https://${slug}-nexacampus.vercel.app`,
-      path_fallback_student: `https://school-webapp-self.vercel.app/school/${slug}`,
-      path_fallback_admin: `https://school-webapp-self.vercel.app/school/${slug}/admin`,
+      student_domain: urls.customDomain,
+      admin_domain: urls.customAdminDomain,
+      vercel_fallback_domain: urls.appDomain,
+      path_fallback_student: urls.pathFallback,
+      path_fallback_admin: urls.pathFallbackAdmin,
       steps_completed: [
         '1. Validating Tenant Slug',
         '2. Persisting Institutional Profile & 15 Module Configs',
