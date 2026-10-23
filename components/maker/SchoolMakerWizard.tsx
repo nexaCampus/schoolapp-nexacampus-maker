@@ -603,7 +603,7 @@ export default function SchoolMakerWizard({
                   <span className="text-[10px] font-mono text-[#454655] dark:text-[#a0a4c0]">Checking...</span>
                 ) : slugAvailable === true ? (
                   <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                    ✓ Available on .nexacampus.tech
+                    ✓ Available on .nexacampus.school
                   </span>
                 ) : slugAvailable === false ? (
                   <span className="text-[10px] font-mono font-bold text-red-600 dark:text-red-400">
@@ -622,7 +622,7 @@ export default function SchoolMakerWizard({
                   className="w-1/2 p-2.5 font-mono font-bold text-[#131b2e] dark:text-white focus:outline-hidden bg-transparent"
                 />
                 <span className="w-1/2 p-2.5 bg-[#f2f3ff] dark:bg-[#151622] text-[#454655] dark:text-[#a0a4c0] font-mono text-xs font-bold border-l border-[#c6c5d8] dark:border-[#2b2f4a]">
-                  .nexacampus.tech
+                  .nexacampus.school
                 </span>
               </div>
 
@@ -630,13 +630,13 @@ export default function SchoolMakerWizard({
                 <div className="flex items-center justify-between text-[#454655] dark:text-[#a0a4c0]">
                   <span className="font-sans font-bold text-[#131b2e] dark:text-white">Student &amp; Public Portal:</span>
                   <span className="text-[#1c2ac8] dark:text-[#bdc2ff] font-bold">
-                    https://{cleanSubdomain}.nexacampus.tech
+                    https://{cleanSubdomain}.nexacampus.school
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-[#454655] dark:text-[#a0a4c0]">
                   <span className="font-sans font-bold text-[#131b2e] dark:text-white">Admin Portal (Custom):</span>
                   <span className="text-amber-700 dark:text-amber-300 font-bold">
-                    https://{cleanSubdomain}.admin.nexacampus.tech
+                    https://{cleanSubdomain}.admin.nexacampus.school
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-[#454655] dark:text-[#a0a4c0]">

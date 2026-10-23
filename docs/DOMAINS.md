@@ -1,4 +1,4 @@
 # Subdomain Strategy
-- Student: <slug>.nexacampus.tech
-- Admin: <slug>.admin.nexacampus.tech
+- Student: <slug>.nexacampus.school
+- Admin: <slug>.admin.nexacampus.school
 - Vercel Fallback: <slug>-nexacampus.vercel.app

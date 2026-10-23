@@ -128,7 +128,7 @@ export default function SchoolMakerGeneratedApp({
               <div className="text-[10px] font-mono text-[#454655] dark:text-[#a0a4c0] flex items-center justify-between pt-1">
                 <span>Custom Domain:</span>
                 <a href={customDomain} target="_blank" rel="noopener noreferrer" className="text-[#1c2ac8] dark:text-[#bdc2ff] hover:underline font-bold truncate">
-                  {config.subdomain}.nexacampus.tech
+                  {config.subdomain}.nexacampus.school
                 </a>
               </div>
             </div>

@@ -15,7 +15,7 @@ export const CANONICAL_APP_HOST = (
   .toLowerCase()
   .trim();
 
-export const PRODUCTION_BASE_DOMAIN = 'nexacampus.tech';
+export const PRODUCTION_BASE_DOMAIN = 'nexacampus.school';
 
 export interface TenantPortalUrls {
   /** Canonical student portal — subdomain of the deployed webapp. */
