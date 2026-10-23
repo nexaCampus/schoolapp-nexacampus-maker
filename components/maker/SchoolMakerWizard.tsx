@@ -219,14 +219,14 @@ export default function SchoolMakerWizard({
   const [selectedPosition, setSelectedPosition] = useState('founder');
 
   // Section 2: School Core Details
-  const [schoolName, setSchoolName] = useState('Greenwood Centennial Academy');
-  const [teacherCount, setTeacherCount] = useState('48');
-  const [studentCapacity, setStudentCapacity] = useState('1,850');
+  const [schoolName, setSchoolName] = useState('');
+  const [teacherCount, setTeacherCount] = useState('50');
+  const [studentCapacity, setStudentCapacity] = useState('1,200');
   const [board, setBoard] = useState('CBSE');
-  const [city, setCity] = useState('Kolkata');
+  const [city, setCity] = useState('');
   const [state, setState] = useState('West Bengal');
-  const [subdomain, setSubdomain] = useState('greenwood');
-  const [motto, setMotto] = useState('Veritas et Virtus (Truth & Virtue)');
+  const [subdomain, setSubdomain] = useState('');
+  const [motto, setMotto] = useState('');
   const [themeColor, setThemeColor] = useState('#0A192F');
 
   // Subdomain validation state
@@ -362,8 +362,9 @@ export default function SchoolMakerWizard({
     setProvisioningStep(1); // 1. Validating Tenant Slug
 
     try {
-      setTimeout(() => setProvisioningStep(2), 600);
-      setTimeout(() => setProvisioningStep(3), 1200);
+      // Step 2 timer simulation while backend processes
+      setTimeout(() => setProvisioningStep(2), 600); // 2. Persisting Profile & 15 Modules
+      setTimeout(() => setProvisioningStep(3), 1200); // 3. Provisioning Vercel Subdomains
 
       const res = await provisionSchool({
         creatorPhone: session.phone,
@@ -381,7 +382,7 @@ export default function SchoolMakerWizard({
         themeColor,
       });
 
-      setProvisioningStep(4);
+      setProvisioningStep(4); // 4. Generating URLs
 
       const config: SchoolAppConfig = {
         creatorPhone: session.phone,
@@ -449,7 +450,9 @@ export default function SchoolMakerWizard({
           </div>
         </div>
 
-        {/* STEP 1: LEADERSHIP POSITION */}
+        {/* ============================================================ */}
+        {/* STEP 1: LEADERSHIP POSITION                                  */}
+        {/* ============================================================ */}
         <div className="bg-white dark:bg-[#151622] p-6 md:p-8 rounded-2xl border border-[#e2e7ff] dark:border-[#222538] shadow-xs space-y-4 transition-colors">
           <div className="flex items-center justify-between border-b border-[#e2e7ff] dark:border-[#222538] pb-3">
             <div>
@@ -495,7 +498,9 @@ export default function SchoolMakerWizard({
           </div>
         </div>
 
-        {/* STEP 2: SCHOOL NAME & ROSTER STRENGTH */}
+        {/* ============================================================ */}
+        {/* STEP 2: SCHOOL NAME & ROSTER STRENGTH                        */}
+        {/* ============================================================ */}
         <div className="bg-white dark:bg-[#151622] p-6 md:p-8 rounded-2xl border border-[#e2e7ff] dark:border-[#222538] shadow-xs space-y-4 transition-colors">
           <div className="flex items-center justify-between border-b border-[#e2e7ff] dark:border-[#222538] pb-3">
             <div>
@@ -510,6 +515,7 @@ export default function SchoolMakerWizard({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+            {/* School Name */}
             <div className="md:col-span-2">
               <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
                 Official Name of the School *
@@ -524,6 +530,7 @@ export default function SchoolMakerWizard({
               />
             </div>
 
+            {/* Number of Teachers */}
             <div>
               <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
                 Number of Teachers in the School *
@@ -538,13 +545,18 @@ export default function SchoolMakerWizard({
                 placeholder="e.g. 48"
                 className="w-full p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white dark:focus:bg-[#101119] focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] font-mono text-[#131b2e] dark:text-white font-bold"
               />
+              <p className="text-[11px] text-[#454655] dark:text-[#a0a4c0] mt-1">
+                Total teaching faculty across junior and senior wings.
+              </p>
             </div>
 
+            {/* Board Affiliation */}
             <div>
               <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
                 Affiliation Board *
               </label>
               <select
+                aria-label="Affiliation board"
                 value={board}
                 onChange={(e) => setBoard(e.target.value)}
                 className="w-full p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white dark:focus:bg-[#101119] focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] text-[#131b2e] dark:text-white font-medium"
@@ -557,6 +569,7 @@ export default function SchoolMakerWizard({
               </select>
             </div>
 
+            {/* Enrolled Scholars Capacity */}
             <div>
               <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
                 Approximate Enrolled Scholars *
@@ -570,6 +583,7 @@ export default function SchoolMakerWizard({
               />
             </div>
 
+            {/* City & State */}
             <div>
               <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
                 City &amp; Territory *
@@ -594,6 +608,7 @@ export default function SchoolMakerWizard({
               </div>
             </div>
 
+            {/* Target Subdomain Identifier (Issue 3: .nexacampus.school) */}
             <div className="md:col-span-2">
               <div className="flex items-center justify-between mb-1">
                 <label className="font-bold text-[#131b2e] dark:text-[#eaedff]">
@@ -618,7 +633,7 @@ export default function SchoolMakerWizard({
                   required
                   value={subdomain}
                   onChange={(e) => setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                  placeholder="e.g. greenwood"
+                  placeholder="e.g. lcgvm, vidyamandir, dps"
                   className="w-1/2 p-2.5 font-mono font-bold text-[#131b2e] dark:text-white focus:outline-hidden bg-transparent"
                 />
                 <span className="w-1/2 p-2.5 bg-[#f2f3ff] dark:bg-[#151622] text-[#454655] dark:text-[#a0a4c0] font-mono text-xs font-bold border-l border-[#c6c5d8] dark:border-[#2b2f4a]">
@@ -626,6 +641,7 @@ export default function SchoolMakerWizard({
                 </span>
               </div>
 
+              {/* Live Preview of 3 Provisioned URLs (Issue 3 Requirement) */}
               <div className="mt-2.5 p-3 rounded-xl bg-[#f2f3ff]/60 dark:bg-[#101119] border border-[#e2e7ff] dark:border-[#222538] space-y-1.5 font-mono text-[11px]">
                 <div className="flex items-center justify-between text-[#454655] dark:text-[#a0a4c0]">
                   <span className="font-sans font-bold text-[#131b2e] dark:text-white">Student &amp; Public Portal:</span>
@@ -648,6 +664,7 @@ export default function SchoolMakerWizard({
               </div>
             </div>
 
+            {/* Institutional Motto */}
             <div>
               <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
                 School Motto
@@ -663,7 +680,9 @@ export default function SchoolMakerWizard({
           </div>
         </div>
 
-        {/* STEP 3: 15 DYNAMIC MODULES */}
+        {/* ============================================================ */}
+        {/* STEP 3: 15 DYNAMIC MODULES (ISSUE 4)                         */}
+        {/* ============================================================ */}
         <div className="bg-white dark:bg-[#151622] p-6 md:p-8 rounded-2xl border border-[#e2e7ff] dark:border-[#222538] shadow-xs space-y-4 transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#e2e7ff] dark:border-[#222538] pb-3 gap-3">
             <div>
@@ -678,6 +697,7 @@ export default function SchoolMakerWizard({
               </p>
             </div>
 
+            {/* Preset Buttons */}
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -696,6 +716,7 @@ export default function SchoolMakerWizard({
             </div>
           </div>
 
+          {/* 15 Feature Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {AVAILABLE_MODULES.map((mod) => {
               const isEnabled = Boolean(moduleSelection[mod.id]);
@@ -706,7 +727,7 @@ export default function SchoolMakerWizard({
                   className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-start gap-3.5 ${
                     isEnabled
                       ? 'border-[#1c2ac8] dark:border-[#3b49df] bg-[#eef0ff]/70 dark:bg-[#3b49df]/15 shadow-xs'
-                      : 'border-[#e2e7ff] dark:border-[#222538] hover:border-[#bdc2ff] dark:hover:border-[#3b49df]/40 bg-white dark:bg-[#151622] opacity-75'
+                      : 'border-[#e2e7ff] dark:border-[#222538] hover:border-[#bdc2ff] dark:hover:border-[#3b49df]/40 bg-white/70 dark:bg-[#151622]/70'
                   }`}
                 >
                   <div className="pt-0.5 flex-shrink-0">
@@ -769,7 +790,9 @@ export default function SchoolMakerWizard({
         </div>
       </form>
 
-      {/* PROVISIONING MODAL */}
+      {/* ============================================================ */}
+      {/* PROVISIONING STEP-BY-STEP CONSOLE MODAL (ISSUE 1 REQUIREMENT) */}
+      {/* ============================================================ */}
       {isProvisioning && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in font-sans">
           <div className="bg-[#0A192F] border border-cyan-500/30 text-white w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-6">

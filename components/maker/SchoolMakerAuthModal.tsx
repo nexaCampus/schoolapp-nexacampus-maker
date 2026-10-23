@@ -66,14 +66,10 @@ export default function SchoolMakerAuthModal({
     const fullPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91 ${digitsOnly.slice(-10)}`;
 
     try {
-      const res = await sendMakerOTP(fullPhone, creatorName.trim() || 'School Administrator');
+      await sendMakerOTP(fullPhone, creatorName.trim() || 'School Administrator');
       setOtpSent(true);
-      if (res.dev_otp) {
-        setOtpCode(res.dev_otp);
-        setDevHint(`Backend Dev OTP: ${res.dev_otp}`);
-      } else {
-        setDevHint('OTP dispatched to phone. Enter code below.');
-      }
+      setOtpCode('');
+      setDevHint(null);
     } catch (err: unknown) {
       setError(sendErrorMessage(err));
     } finally {
@@ -113,6 +109,22 @@ export default function SchoolMakerAuthModal({
         console.error('Failed to store creator session', err);
       }
 
+      // Ask the server to mint the signed creator cookie the edge guard trusts.
+      try {
+        await fetch('/api/auth/session', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mode: 'creator',
+            phone: res.session.phone,
+            token: res.token || '',
+          }),
+        });
+      } catch {
+        // Non-fatal: the studio still works in this tab.
+      }
+
       onSuccess(session);
     } catch (err: unknown) {
       setError(null);
@@ -136,9 +148,9 @@ export default function SchoolMakerAuthModal({
                 <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-300 block">
                   NexaCampus SchoolMaker
                 </span>
-                <h3 className="font-serif font-bold text-lg text-white">
+                <h2 className="font-serif font-bold text-lg text-white">
                   Creator Verification
-                </h3>
+                </h2>
               </div>
             </div>
             {onClose && (
@@ -198,7 +210,7 @@ export default function SchoolMakerAuthModal({
                   />
                 </div>
                 <p className="text-[11px] text-[#454655] dark:text-[#a0a4c0] mt-1">
-                  A 6-digit SMS verification code will be dispatched to this number.
+                  A 6-digit WhatsApp verification code will be dispatched to this number.
                 </p>
               </div>
 
@@ -209,7 +221,7 @@ export default function SchoolMakerAuthModal({
                   className="w-full py-3 bg-[#1c2ac8] hover:bg-[#15209e] dark:bg-[#3b49df] dark:hover:bg-[#2e3cc4] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
                   {isSendingOtp ? (
-                    <span>Dispatching OTP...</span>
+                    <span>Dispatching WhatsApp OTP...</span>
                   ) : (
                     <>
                       <span>Send Verification Code</span>
@@ -222,22 +234,21 @@ export default function SchoolMakerAuthModal({
           ) : (
             /* Step B: 6-Digit OTP Verification */
             <form onSubmit={handleVerifyOtp} className="space-y-4 text-xs">
-              <div className="p-3 bg-amber-500/10 dark:bg-amber-500/15 rounded-xl border border-amber-500/30 flex items-center justify-between">
+              <div className="p-3 bg-emerald-500/10 dark:bg-emerald-500/15 rounded-xl border border-emerald-500/30 flex items-center justify-between">
                 <div>
-                  <span className="text-[#454655] dark:text-[#a0a4c0] block text-[11px]">Verification code sent to:</span>
-                  <span className="font-mono font-bold text-[#131b2e] dark:text-white">
+                  <span className="text-[#454655] dark:text-[#a0a4c0] block text-[11px]">Verification code sent via WhatsApp to:</span>
+                  <span className="font-mono font-bold text-[#131b2e] dark:text-white flex items-center gap-1.5 mt-0.5">
+                    <span className="text-emerald-500 text-sm">💬</span>
                     {phoneNumber.startsWith('+') ? phoneNumber : `+91 ${phoneNumber}`}
                   </span>
-                  {devHint && (
-                    <span className="text-[10px] text-amber-700 dark:text-amber-300 font-mono block mt-0.5">
-                      {devHint}
-                    </span>
-                  )}
                 </div>
                 <button
                   type="button"
-                  onClick={() => setOtpSent(false)}
-                  className="text-amber-700 dark:text-amber-300 underline text-[11px] font-semibold cursor-pointer"
+                  onClick={() => {
+                    setOtpSent(false);
+                    setOtpCode('');
+                  }}
+                  className="text-emerald-700 dark:text-emerald-400 underline text-[11px] font-semibold cursor-pointer"
                 >
                   Change
                 </button>
@@ -245,7 +256,7 @@ export default function SchoolMakerAuthModal({
 
               <div>
                 <label className="block font-bold text-[#131b2e] dark:text-[#eaedff] mb-1">
-                  Enter 6-Digit SMS Code *
+                  Enter 6-Digit WhatsApp Code *
                 </label>
                 <input
                   type="text"
@@ -253,17 +264,15 @@ export default function SchoolMakerAuthModal({
                   required
                   value={otpCode}
                   onChange={(e) => {
-                    setOtpCode(e.target.value);
+                    const clean = e.target.value.replace(/\D/g, '').slice(0, 6);
+                    setOtpCode(clean);
                     if (otpError) setOtpError(null);
                   }}
-                  placeholder="123456"
-                  className="w-full p-3 text-center tracking-[0.5em] text-lg font-mono font-bold bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] text-[#131b2e] dark:text-white"
+                  placeholder="• • • • • •"
+                  className="w-full p-3 text-center tracking-[0.5em] text-lg font-mono font-bold bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] text-[#131b2e] dark:text-white placeholder:tracking-normal placeholder:font-normal placeholder:text-slate-400"
                 />
                 <div className="flex items-center justify-between text-[11px] text-[#454655] dark:text-[#a0a4c0] mt-1.5">
-                  <span>Enter the correct 6-digit OTP sent to your phone.</span>
-                  {devHint && (
-                    <span className="font-mono font-bold text-amber-600 dark:text-amber-300">{devHint}</span>
-                  )}
+                  <span>Enter the 6-digit code received on your WhatsApp number.</span>
                 </div>
                 {otpError && (
                   <p className="mt-2 flex items-start gap-1.5 text-[11px] font-bold text-red-600 dark:text-red-400">
@@ -280,7 +289,7 @@ export default function SchoolMakerAuthModal({
                   className="w-full py-3 bg-[#1c2ac8] hover:bg-[#15209e] dark:bg-[#3b49df] dark:hover:bg-[#2e3cc4] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
                 >
                   {isVerifying ? (
-                    <span>Verifying with Go Backend...</span>
+                    <span>Verifying WhatsApp OTP...</span>
                   ) : (
                     <>
                       <span>Verify &amp; Enter SchoolMaker</span>
